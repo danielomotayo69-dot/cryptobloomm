@@ -1,1 +1,36 @@
-.sql
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel
+.env
+/public/storage
+/public/hot
+/storage/*.key
+
+# Laravel extras
+bootstrap/compiled.php
+storage/
+public/storage
+public/hot
+
+# Environment backups
+.env.backup
+.env.production
+
+# Config / local
+Homestead.yaml
+Homestead.json
+/.vagrant
+
+# Cache / test
+.phpunit.result.cache
+.phpactor.json
+
+# Build
+/public/build
+/storage/pail
+
+# Ignore SQL files
+*.sql
