@@ -1,36 +1,28 @@
-# Use PHP 7.4 with Apache
-FROM php:7.4-apache
+# Use official PHP 8.2 Apache image
+FROM php:8.2-apache
+
+# Install PHP extensions required for Laravel
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip unzip git curl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Force Apache to use a single MPM (prefork) and enable rewrite
+RUN a2dismod mpm_event mpm_worker \
+    && a2enmod mpm_prefork rewrite
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    curl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-# Disable extra MPMs, enable only one MPM (prefork) and rewrite
-RUN a2dismod mpm_event mpm_worker
-RUN a2enmod rewrite
-
-# Copy project files
+# Copy application files
 COPY . .
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
-
-# Ensure storage and bootstrap/cache directories exist and are writable
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Fix permissions for storage and bootstrap/cache
+RUN mkdir -p storage framework/cache bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache framework \
+    && chmod -R 775 storage bootstrap/cache framework
 
 # Expose port 80
 EXPOSE 80

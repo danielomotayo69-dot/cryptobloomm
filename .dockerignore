@@ -1,5 +1,7 @@
-/vendor
-/node_modules
-.env
-database.sql
+node_modules
+vendor
 .git
+.gitignore
+.env
+npm-debug.log
+yarn-error.log
