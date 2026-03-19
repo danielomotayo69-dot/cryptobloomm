@@ -1,4 +1,4 @@
-# Use official PHP 7.4 with Apache
+# Use PHP 7.4 with Apache
 FROM php:7.4-apache
 
 # Set working directory
@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Disable conflicting MPMs, enable prefork and rewrite
+# Disable extra MPMs, enable only one MPM (prefork) and rewrite
 RUN a2dismod mpm_event mpm_worker
-RUN a2enmod mpm_prefork rewrite
+RUN a2enmod rewrite
 
 # Copy project files
 COPY . .
